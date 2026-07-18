@@ -1,0 +1,80 @@
+.view-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.refresh-btn {
+  padding: 6px 14px;
+  border: 1px solid #d3d1c7;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.audit-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.audit-table th, .audit-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e4e4e7;
+  vertical-align: top;
+  font-size: 13px;
+}
+.audit-table tr:last-child td { border-bottom: none; }
+.audit-table th {
+  background: #fafafa;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #5f5e5a;
+  font-weight: 600;
+}
+.col-when { width: 20%; }
+.col-service { width: 18%; font-weight: 600; word-break: break-word; }
+.col-move { width: 17%; white-space: nowrap; }
+.col-version { width: 23%; }
+.col-result { width: 22%; }
+
+.failed-row { background: #fefaf8; }
+
+.env { font-weight: 600; font-size: 12px; }
+.arrow { color: #888780; margin: 0 6px; }
+.arrow-down { color: #b4b2a9; font-size: 12px; line-height: 1.2; }
+
+.prev, .next {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
+}
+.prev { color: #888780; text-decoration: line-through; }
+.next { font-weight: 600; }
+.none { color: #d3d1c7; }
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.badge.ok { background: #e1f5ee; color: #085041; }
+.badge.fail { background: #faece7; color: #712b13; }
+
+.message {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #712b13;
+  word-break: break-word;
+}
+.load-error { color: #a32d2d; }
+.empty { color: #888780; }

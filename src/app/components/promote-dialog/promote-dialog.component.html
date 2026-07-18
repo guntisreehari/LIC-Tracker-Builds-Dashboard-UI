@@ -1,0 +1,77 @@
+<div class="panels">
+
+  <!-- Deploy a specific build tag (e.g. QA) -->
+  <div class="panel" *ngIf="actions.deployByTagEnvs.length">
+    <h3>Deploy build</h3>
+    <div class="row">
+      <label>
+        Service
+        <select [(ngModel)]="deployService" [disabled]="submitting">
+          <option *ngFor="let s of services" [value]="s">{{ s }}</option>
+        </select>
+      </label>
+
+      <label>
+        Environment
+        <select [(ngModel)]="deployEnv" [disabled]="submitting">
+          <option *ngFor="let e of actions.deployByTagEnvs" [value]="e">{{ e | uppercase }}</option>
+        </select>
+      </label>
+
+      <label class="grow">
+        Build tag
+        <input type="text" placeholder="e.g. Release.0473ca6"
+               [(ngModel)]="deployTag" [disabled]="submitting" />
+      </label>
+
+      <button (click)="askDeploy()" [disabled]="!canDeploy">Deploy</button>
+    </div>
+
+    <div class="confirm-box" *ngIf="confirming === 'deploy'">
+      <p>
+        Deploy <strong>{{ deployService }}</strong> build
+        <strong>{{ deployTag }}</strong> to
+        <strong>{{ deployEnv | uppercase }}</strong>?
+      </p>
+      <button (click)="confirmDeploy()" [disabled]="submitting">Confirm</button>
+      <button class="secondary" (click)="cancel()" [disabled]="submitting">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Promote between environments (e.g. QA -> PROD) -->
+  <div class="panel" *ngIf="actions.promotionPaths.length">
+    <h3>Promote build</h3>
+    <div class="row">
+      <label>
+        Service
+        <select [(ngModel)]="promoteService" [disabled]="submitting">
+          <option *ngFor="let s of services" [value]="s">{{ s }}</option>
+        </select>
+      </label>
+
+      <label>
+        Path
+        <select [(ngModel)]="selectedHopIndex" [disabled]="submitting">
+          <option *ngFor="let hop of actions.promotionPaths; let i = index" [ngValue]="i">
+            {{ hop.from | uppercase }} &rarr; {{ hop.to | uppercase }}
+          </option>
+        </select>
+      </label>
+
+      <button (click)="askPromote()" [disabled]="!canPromote">Promote</button>
+    </div>
+
+    <div class="confirm-box warn" *ngIf="confirming === 'promote' && selectedHop as hop">
+      <p>
+        Deploy <strong>{{ promoteService }}</strong>'s current
+        <strong>{{ hop.from | uppercase }}</strong> build to
+        <strong>{{ hop.to | uppercase }}</strong>?
+      </p>
+      <button (click)="confirmPromote()" [disabled]="submitting">Confirm</button>
+      <button class="secondary" (click)="cancel()" [disabled]="submitting">Cancel</button>
+    </div>
+  </div>
+
+  <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+</div>

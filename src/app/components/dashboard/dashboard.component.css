@@ -1,0 +1,86 @@
+.view-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.load-error { color: #a32d2d; }
+
+h1 { font-size: 20px; font-weight: 600; margin: 0; }
+.refresh-btn {
+  padding: 6px 14px;
+  border: 1px solid #d3d1c7;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.deploy-table {
+  width: 100%;
+  table-layout: fixed;      /* ← added: makes columns respect set widths, distributes rest equally */
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.deploy-table th, .deploy-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e4e4e7;
+  vertical-align: top;
+}
+.deploy-table tr:last-child td { border-bottom: none; }
+.deploy-table th {
+  background: #fafafa;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #5f5e5a;
+}
+.service-col {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.badge.deployed { background: #e1f5ee; color: #085041; }
+.badge.not_found, .badge.error { background: #faece7; color: #712b13; }
+.tag {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+.tag-missing { font-size: 12px; color: #888780; }
+.service-link {
+  display: inline-block;
+  font-size: 12px;
+  color: #185fa5;
+  text-decoration: none;
+  margin-top: 4px;
+}
+.service-link:hover { text-decoration: underline; }
+.fetched-at { font-size: 11px; color: #b4b2a9; margin-top: 4px; }
+.cell-empty { color: #d3d1c7; }
+
+.service-col {
+  font-weight: 600;
+  width: 22%;               /* ← changed: was white-space: nowrap */
+  word-break: break-word;
+}
+
+.tag {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;         /* ← added */
+  text-overflow: ellipsis;  /* ← added */
+  white-space: nowrap;      /* ← added */
+  cursor: help;             /* ← added */
+}
