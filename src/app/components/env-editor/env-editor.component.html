@@ -1,0 +1,81 @@
+<div class="panel">
+  <h3>Environment variables</h3>
+
+  <div class="row">
+    <label>
+      Service
+      <select [(ngModel)]="service" [disabled]="submitting">
+        <option *ngFor="let s of services" [value]="s">{{ s }}</option>
+      </select>
+    </label>
+
+    <label>
+      Environment
+      <select [(ngModel)]="env" [disabled]="submitting">
+        <option *ngFor="let e of envs" [value]="e">{{ e | uppercase }}</option>
+      </select>
+    </label>
+
+    <button (click)="load()" [disabled]="loading || submitting">Load</button>
+  </div>
+
+  <p *ngIf="loading">Loading…</p>
+
+  <table class="env-table" *ngIf="loaded && vars.length">
+    <thead>
+      <tr><th>Name</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of vars" [class.edited]="isEdited(v.name)">
+        <td class="env-name">{{ v.name }}</td>
+        <td>
+          <ng-container *ngIf="v.sensitive; else plain">
+            <input type="text" placeholder="•••••••• hidden — type to replace"
+                   [disabled]="submitting" (input)="onEdit(v.name, $event)" />
+            <span class="hint">value not shown</span>
+          </ng-container>
+          <ng-template #plain>
+            <input type="text" [value]="v.value" [disabled]="submitting"
+                   (input)="onEdit(v.name, $event)" />
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loaded && !vars.length">No environment variables set on this service.</p>
+
+  <div class="row" *ngIf="loaded">
+    <label>
+      Add variable
+      <input type="text" placeholder="NAME" [(ngModel)]="newName" [disabled]="submitting" />
+    </label>
+    <label class="grow">
+      Value
+      <input type="text" placeholder="value" [(ngModel)]="newValue" [disabled]="submitting" />
+    </label>
+  </div>
+
+  <div class="row" *ngIf="loaded">
+    <label class="grow">
+      Admin token
+      <input type="password" placeholder="required to save changes"
+             [(ngModel)]="token" [disabled]="submitting" autocomplete="off" />
+    </label>
+    <button (click)="ask()" [disabled]="!canSubmit">Save changes</button>
+  </div>
+
+  <div class="confirm-box warn" *ngIf="confirming">
+    <p>
+      Update <strong>{{ pendingNames.length }}</strong> variable(s) on
+      <strong>{{ service }}</strong> / <strong>{{ env | uppercase }}</strong>?
+    </p>
+    <p class="hint">{{ pendingNames.join(', ') }}</p>
+    <p class="hint">This starts a new revision. A wrong value can take the service down.</p>
+    <button (click)="confirm()" [disabled]="submitting">Confirm</button>
+    <button class="secondary" (click)="cancel()" [disabled]="submitting">Cancel</button>
+  </div>
+
+  <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+</div>

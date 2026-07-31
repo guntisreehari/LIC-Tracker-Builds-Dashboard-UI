@@ -1,0 +1,51 @@
+<div class="view">
+  <div class="view-actions">
+    <button class="refresh-btn" (click)="load()">Refresh</button>
+  </div>
+
+  <p *ngIf="loading">Loading promotion history...</p>
+  <p class="load-error" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+  <p class="empty" *ngIf="!loading && !errorMsg && entries.length === 0">
+    No promotions recorded yet.
+  </p>
+
+  <table class="audit-table" *ngIf="!loading && entries.length">
+    <thead>
+      <tr>
+        <th class="col-when">When</th>
+        <th class="col-service">Service</th>
+        <th class="col-move">Promotion</th>
+        <th class="col-version">Version change</th>
+        <th class="col-result">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of entries" [class.failed-row]="!e.success">
+        <td class="col-when">{{ e.timestamp | date:'medium' }}</td>
+        <td class="col-service">{{ e.service }}</td>
+        <td class="col-move">
+          <span class="env">{{ e.sourceEnv | uppercase }}</span>
+          <span class="arrow">&rarr;</span>
+          <span class="env">{{ e.targetEnv | uppercase }}</span>
+        </td>
+        <td class="col-version">
+          <div class="prev" *ngIf="e.previousImageTag" [title]="e.previousImage || ''">
+            {{ e.previousImageTag }}
+          </div>
+          <div class="arrow-down" *ngIf="e.previousImageTag && e.imageTag">&darr;</div>
+          <div class="next" *ngIf="e.imageTag" [title]="e.image || ''">
+            {{ e.imageTag }}
+          </div>
+          <div class="none" *ngIf="!e.previousImageTag && !e.imageTag">—</div>
+        </td>
+        <td class="col-result">
+          <span class="badge" [class.ok]="e.success" [class.fail]="!e.success">
+            {{ e.success ? 'SUCCESS' : 'FAILED' }}
+          </span>
+          <div class="message" *ngIf="!e.success && e.message">{{ e.message }}</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

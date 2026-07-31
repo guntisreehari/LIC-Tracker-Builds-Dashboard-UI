@@ -1,0 +1,36 @@
+<div class="view">
+  <div class="view-actions">
+    <button class="refresh-btn" (click)="refresh()">Refresh</button>
+  </div>
+
+  <table class="deploy-table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th class="service-col">Service</th>
+        <th *ngFor="let env of table.envs">{{ env | uppercase }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of table.services">
+        <td class="service-col">{{ row.service }}</td>
+        <td *ngFor="let env of table.envs">
+          <ng-container *ngIf="row.deployments[env] as status">
+            <div class="cell">
+              <span class="badge" [class]="status.status.toLowerCase()">{{ status.status }}</span>
+              <div class="tag" *ngIf="status.imageTag" [title]="status.imageFull || status.imageTag">{{ status.imageTag }}</div>
+              <div class="tag-missing" *ngIf="!status.imageTag">{{ status.message || 'No build found' }}</div>
+              <a class="service-link" *ngIf="status.serviceUrl" [href]="status.serviceUrl" target="_blank" rel="noopener">Open ↗</a>
+              <div class="fetched-at">{{ status.fetchedAt | date:'short' }}</div>
+            </div>
+          </ng-container>
+          <span class="cell-empty" *ngIf="!row.deployments[env]">—</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">Loading deployment status...</p>
+  <p class="load-error" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+  <app-promote-dialog [services]="serviceNames" (promoted)="refresh()"></app-promote-dialog>
+</div>
