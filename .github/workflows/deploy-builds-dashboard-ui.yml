@@ -8,7 +8,10 @@ on:
 
 env:
   PROJECT_ID: lictracker-deploy-dashboard
-  REGION: asia-south1
+  # Cloud Run moved to Singapore: neither Indian region permits domain mappings.
+  REGION: asia-southeast1
+  # Artifact Registry stayed in Mumbai — keep the image path valid.
+  AR_REGION: asia-south1
   REPO_NAME: builds-dashboard-repo
   IMAGE_NAME: builds-dashboard-ui
   SERVICE_NAME: builds-dashboard-ui
@@ -31,7 +34,7 @@ jobs:
         run: |
           SHORT_SHA="${GITHUB_SHA::7}"
           BUILD_TAG="Release.${SHORT_SHA}"
-          IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${BUILD_TAG}"
+          IMAGE_URI="${AR_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${BUILD_TAG}"
 
           echo "SHORT_SHA=${SHORT_SHA}" >> "$GITHUB_ENV"
           echo "BUILD_TAG=${BUILD_TAG}" >> "$GITHUB_ENV"
@@ -52,7 +55,7 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+        run: gcloud auth configure-docker "${AR_REGION}-docker.pkg.dev" --quiet
 
       - name: Build and push image
         shell: bash
