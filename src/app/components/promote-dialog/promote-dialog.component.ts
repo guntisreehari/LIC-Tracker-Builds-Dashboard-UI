@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DashboardService } from '../../services/dashboard.service';
-import { ActionsConfig, Hop } from '../../models/env-status.model';
+import { ActionsConfig } from '../../models/env-status.model';
 
 @Component({
   selector: 'app-promote-dialog',
@@ -15,18 +15,14 @@ export class PromoteDialogComponent implements OnInit, OnChanges {
   @Input() services: string[] = [];
   @Output() promoted = new EventEmitter<void>();
 
-  actions: ActionsConfig = { promotionPaths: [], deployByTagEnvs: [] };
+  actions: ActionsConfig = { deployByTagEnvs: [] };
 
   // Deploy-by-tag form
   deployService = '';
   deployEnv = '';
   deployTag = '';
 
-  // Promote form
-  promoteService = '';
-  selectedHopIndex = 0;
-
-  confirming: 'deploy' | 'promote' | null = null;
+  confirming: 'deploy' | null = null;
   submitting = false;
   errorMsg: string | null = null;
   successMsg: string | null = null;
@@ -49,25 +45,13 @@ export class PromoteDialogComponent implements OnInit, OnChanges {
     if (!this.deployService && this.services.length) {
       this.deployService = this.services[0];
     }
-    if (!this.promoteService && this.services.length) {
-      this.promoteService = this.services[0];
-    }
-  }
-
-  get selectedHop(): Hop | undefined {
-    return this.actions.promotionPaths[this.selectedHopIndex];
   }
 
   get canDeploy(): boolean {
     return !!this.deployService && !!this.deployEnv && !!this.deployTag.trim() && !this.submitting;
   }
 
-  get canPromote(): boolean {
-    return !!this.promoteService && !!this.selectedHop && !this.submitting;
-  }
-
   askDeploy() { if (this.canDeploy) this.confirming = 'deploy'; }
-  askPromote() { if (this.canPromote) this.confirming = 'promote'; }
   cancel() { this.confirming = null; }
 
   confirmDeploy() {
@@ -78,19 +62,6 @@ export class PromoteDialogComponent implements OnInit, OnChanges {
       .subscribe({
         next: (res) => this.done(res.message),
         error: (err) => this.failed(err, 'Deploy failed')
-      });
-  }
-
-  confirmPromote() {
-    const hop = this.selectedHop;
-    if (!hop) return;
-    this.submitting = true;
-    this.errorMsg = null;
-    this.successMsg = null;
-    this.dashboardService.promote(this.promoteService, hop.from, hop.to)
-      .subscribe({
-        next: (res) => this.done(res.message),
-        error: (err) => this.failed(err, 'Promote failed')
       });
   }
 

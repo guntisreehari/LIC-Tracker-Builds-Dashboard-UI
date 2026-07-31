@@ -40,12 +40,12 @@ export interface AuditEntry {
   message: string | null;
 }
 
-export interface Hop {
-  from: string;
-  to: string;
-}
-
 export interface ActionsConfig {
-  promotionPaths: Hop[];
   deployByTagEnvs: string[];
+}
+export interface EnvVarView {
+  name: string;
+  /** null when sensitive: credential values are never sent to the browser. */
+  value: string | null;
+  sensitive: boolean;
 }
